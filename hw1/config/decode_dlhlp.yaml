@@ -1,0 +1,29 @@
+# Most of the parameters will be imported from the training config
+src:
+  ckpt: './best_att.pth'
+  config: 'config/asr_dlhlp.yaml'
+data:
+  corpus:
+    name: 'Dlhlp'
+    dev_split: ['dev']
+    test_split: ['test']
+decode:
+  beam_size: 5
+  min_len_ratio: 0.01
+  max_len_ratio: 0.30
+  lm_path: './best_ppx.pth'
+  lm_config: 'config/lm_dlhlp.yaml'
+  lm_weight: 0.3
+  ctc_weight: 0.0
+
+hparas:                                   # Experiment hyper-parameters
+  valid_step: 500
+  max_step: 12001
+  tf_start: 1.0
+  tf_end: 1.0
+  tf_step: 500000
+  optimizer: 'Adadelta'
+  lr: 1.0
+  eps: 0.00000001                         # 1e-8
+  lr_scheduler: 'fixed'                   # 'fixed'/'warmup'
+  curriculum: 0
