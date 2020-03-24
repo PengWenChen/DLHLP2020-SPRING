@@ -93,14 +93,14 @@ def create_dataset(tokenizer, ascending, name, path, bucketing, batch_size,
         # Testing model
         mode = 'test'
         # Do not use bucketing for dev set
-        dv_set = Dataset(path, dev_split, tokenizer, 1)
+        dv_set = Dataset(path, test_split, tokenizer, 1)
         # Do not use bucketing for test set
         tt_set = Dataset(path, test_split, tokenizer, 1)
         # Messages to show
-        msg_list = _data_msg(name, path, dev_split.__str__(), len(dv_set),
+        msg_list = _data_msg(name, path, test_split.__str__(), len(dv_set),
                              test_split.__str__(), len(tt_set), batch_size, False)
-        msg_list = [m.replace('Dev', 'Test').replace(
-            'Train', 'Dev') for m in msg_list]
+        msg_list = [m.replace('Test', 'Test').replace(
+            'Train', 'Test') for m in msg_list]
         return dv_set, tt_set, batch_size, batch_size, mode, msg_list
 
 
