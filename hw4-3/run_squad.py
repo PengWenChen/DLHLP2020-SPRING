@@ -603,8 +603,10 @@ def main():
     logger.info("Results: {}".format(results))
     if not os.path.exists(args.output_file_path):
         os.makedirs(args.output_file_path)
-    infile = json.load(open('args.output_dir/predictions_.json'))
-    with open('args.output_file_path/output.csv', "w") as f:
+    output_prediction_file = os.path.join(args.output_dir, "predictions_.json")
+    output_file = os.path.join(args.output_file_path, "output.csv")
+    infile = json.load(open(output_prediction_file))
+    with open(output_file, "w") as f:
         f.write(f"ID,Answer\n")
         for key, value in infile.items():
             f.write(f'{key},{value.replace(",","")}\n')
