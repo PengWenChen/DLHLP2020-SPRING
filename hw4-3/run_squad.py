@@ -37,7 +37,7 @@ except:
     from tensorboardX import SummaryWriter
 
 from tqdm import tqdm, trange
-from transformers import AutoModelForQuestionAnswering, BertTokenizer
+
 from transformers import (WEIGHTS_NAME, BertConfig,
                                   BertForQuestionAnswering, BertTokenizer,
                                   XLMConfig, XLMForQuestionAnswering,
@@ -45,7 +45,7 @@ from transformers import (WEIGHTS_NAME, BertConfig,
                                   XLNetForQuestionAnswering,
                                   XLNetTokenizer,
                                   DistilBertConfig, DistilBertForQuestionAnswering, DistilBertTokenizer,
-                                  AlbertConfig, AlbertForQuestionAnswering, AlbertTokenizer, AutoTokenizer)
+                                  AlbertConfig, AlbertForQuestionAnswering, AlbertTokenizer)
 """
 from transformers import (WEIGHTS_NAME, BertConfig,
                                   BertForQuestionAnswering, BertTokenizer,
@@ -421,9 +421,9 @@ def main():
     parser.add_argument("--do_lower_case", action='store_true',
                         help="Set this flag if you are using an uncased model.")
 
-    parser.add_argument("--per_gpu_train_batch_size", default=25, type=int,
+    parser.add_argument("--per_gpu_train_batch_size", default=50, type=int,
                         help="Batch size per GPU/CPU for training.")
-    parser.add_argument("--per_gpu_eval_batch_size", default=25, type=int,
+    parser.add_argument("--per_gpu_eval_batch_size", default=50, type=int,
                         help="Batch size per GPU/CPU for evaluation.")
     parser.add_argument("--learning_rate", default=5e-5, type=float,
                         help="The initial learning rate for Adam.")
@@ -475,7 +475,7 @@ def main():
     parser.add_argument('--server_ip', type=str, default='', help="Can be used for distant debugging.")
     parser.add_argument('--server_port', type=str, default='', help="Can be used for distant debugging.")
     parser.add_argument('--model_name', type=str, default="")
-    parser.add_argument('--output_file_path', type=str, default="")
+    parser.add_argument('--output_file_name', type=str, default="")
     args = parser.parse_args()
 
     if os.path.exists(args.output_dir) and os.listdir(args.output_dir) and args.do_train and not args.overwrite_output_dir:
@@ -526,7 +526,7 @@ def main():
     #                                     from_tf=bool(".ckpt" in args.model_name_or_path),
     #                                     config=config,
     #                                     cache_dir=args.cache_dir if args.cache_dir else None)
-    model = AutoModelForQuestionAnswering.from_pretrained(args.model_name_or_path)
+    model = AlbertForQuestionAnswering.from_pretrained(args.model_name_or_path)
     tokenizer = BertTokenizer.from_pretrained(args.model_name_or_path)
 
     if args.local_rank == 0:
@@ -601,16 +601,13 @@ def main():
             results.update(result)
 
     logger.info("Results: {}".format(results))
-    if not os.path.exists(args.output_file_path):
-        os.makedirs(args.output_file_path)
     output_prediction_file = os.path.join(args.output_dir, "predictions_.json")
-    output_file = os.path.join(args.output_file_path, "output.csv")
+    output_file = os.path.join(args.output_file_name)
     infile = json.load(open(output_prediction_file))
     with open(output_file, "w") as f:
         f.write(f"ID,Answer\n")
         for key, value in infile.items():
             f.write(f'{key},{value.replace(",","")}\n')
-
 
     return results
 
