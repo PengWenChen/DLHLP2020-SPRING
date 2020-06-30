@@ -1,0 +1,1 @@
+wget https://www.dropbox.com/s/3n6bj1nxhc2yxic/my_cws_bert.pt
